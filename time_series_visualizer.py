@@ -1,18 +1,19 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
 # Import data (Make sure to parse dates. Consider setting index column to 'date'.)
-df = pd.read_csv('fcc-forum-pageviews.csv',index_col='date', parse_dates=True)
-print(df.describe())
-print('csv_data1\n', df)
-
+df = pd.read_csv('fcc-forum-pageviews.csv', parse_dates=True)
+#print(df.describe())
+print('csv_data1', df)
 
 # Clean data
 df = df[(df['value'] <= df['value'].quantile(0.975)) & (df['value'] >= df['value'].quantile(0.025))]
-print('csv_data2\n', df.info())
+print('ggggggggg', df.shape)
+print('dtype1', df.dtypes)
 
 
 def draw_line_plot():
@@ -28,13 +29,23 @@ def draw_line_plot():
     return fig
 
 def draw_bar_plot():
+    
     # Copy and modify data for monthly bar plot
-    df_bar = None
+    df_bar = df.copy()
+       
+    df_bar['year'] = pd.to_datetime(df_bar['date']).dt.year
+    df_bar['month'] = pd.to_datetime(df_bar['date']).dt.month
+    print('csv_data55\n', df_bar)
 
+    groupedData = df_bar.groupby(["year", "month"])
+    monthly_averages = groupedData.aggregate({"value":np.mean})
+    print('monthly_averages\n', monthly_averages)
+    
+   
     # Draw bar plot
+    #plt.bar(, height='200')
 
-
-
+    fig = plt.figure(frameon=False)
 
 
     # Save image and return fig (don't change this part)
