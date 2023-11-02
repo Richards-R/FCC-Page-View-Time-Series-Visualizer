@@ -9,12 +9,9 @@ register_matplotlib_converters()
 df = pd.read_csv('fcc-forum-pageviews.csv', parse_dates=True)
 df["date"] = pd.to_datetime(df["date"])
 
-print('csv_data1', df)
-
 # Clean data
 df = df[(df['value'] <= df['value'].quantile(0.975)) & (df['value'] >= df['value'].quantile(0.025))]
-print('ggggggggg', df.shape)
-print('dtype1', df.dtypes)
+
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 def draw_line_plot():
@@ -36,11 +33,10 @@ def draw_bar_plot():
        
     df_bar['year'] = pd.to_datetime(df_bar['date'], errors='coerce').dt.year
     df_bar['month'] = pd.to_datetime(df_bar['date'], errors='coerce').dt.month
-    print('csv_data55\n', df_bar.dtypes)
-    print('csv_data66\n', df_bar)
+
     df_bar["month"] = df_bar["month"].apply(lambda data: months[data-1])
     df_bar["month"] = pd.Categorical(df_bar["month"], categories=months)
-    print('csv_data77\n', df_bar)
+
     df_pivot = pd.pivot_table(df_bar, values="value", index="year", columns="month", aggfunc=np.mean)
 
     # Draw bar plot
